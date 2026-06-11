@@ -1,11 +1,11 @@
 // cmd/api/main.go
-package main
 
 // @title           Agentic Serverless API
 // @version         1.0
 // @description     A production-ready Go API starter kit designed to be consumed by AI agents.
 // @host            localhost:8080
 // @BasePath        /
+package main
 
 import (
 	"context"

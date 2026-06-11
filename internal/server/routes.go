@@ -8,16 +8,18 @@ import (
 	"github.com/jscarton/agentic-serverless-api/internal/mcp"
 	"github.com/jscarton/agentic-serverless-api/internal/tools/tictactoe"
 	"github.com/redis/go-redis/v9"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	_ "github.com/jscarton/agentic-serverless-api/docs/swagger"
 )
 
 func registerRoutes(r *gin.Engine, cfg *config.Config, db pinger, cache pinger, redisClient *redis.Client, registry *mcp.Registry) {
 	r.GET("/health", health.NewHandler(db, cache).Handle)
 	r.POST("/mcp", mcp.NewServer(registry).Handle)
 
-	// TODO(Task 17): Add Swagger routes here after `make swag` generates docs/swagger.
-	// if cfg.SwaggerEnabled {
-	// 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	// }
+	if cfg.SwaggerEnabled {
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	}
 
 	if redisClient != nil {
 		store := tictactoe.NewStore(redisClient)

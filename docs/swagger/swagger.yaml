@@ -1,0 +1,141 @@
+basePath: /
+definitions:
+  internal_tools_tictactoe.moveRequest:
+    properties:
+      player:
+        enum:
+        - X
+        - O
+        type: string
+      position:
+        maximum: 8
+        minimum: 0
+        type: integer
+    required:
+    - player
+    - position
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: A production-ready Go API starter kit designed to be consumed by AI
+    agents.
+  title: Agentic Serverless API
+  version: "1.0"
+paths:
+  /health:
+    get:
+      description: Returns liveness status of all configured dependencies
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Health check
+      tags:
+      - health
+  /mcp:
+    post:
+      consumes:
+      - application/json
+      description: Handles MCP Streamable HTTP transport. Supports tools/list and
+        tools/call.
+      parameters:
+      - description: JSON-RPC 2.0 request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: MCP endpoint (JSON-RPC 2.0)
+      tags:
+      - mcp
+  /tools/tictactoe/games:
+    post:
+      description: Creates a new game session. X always goes first.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new tic-tac-toe game
+      tags:
+      - tictactoe
+  /tools/tictactoe/games/{id}:
+    get:
+      description: Returns the current state of a tic-tac-toe game.
+      parameters:
+      - description: Game ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get current game state
+      tags:
+      - tictactoe
+  /tools/tictactoe/games/{id}/moves:
+    post:
+      consumes:
+      - application/json
+      description: Submits a player's move. Returns updated board state.
+      parameters:
+      - description: Game ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Move details
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_tools_tictactoe.moveRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Make a move in a tic-tac-toe game
+      tags:
+      - tictactoe
+swagger: "2.0"

@@ -1,0 +1,206 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A production-ready Go API starter kit designed to be consumed by AI agents.",
+        "title": "Agentic Serverless API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/",
+    "paths": {
+        "/health": {
+            "get": {
+                "description": "Returns liveness status of all configured dependencies",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "health"
+                ],
+                "summary": "Health check",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/mcp": {
+            "post": {
+                "description": "Handles MCP Streamable HTTP transport. Supports tools/list and tools/call.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mcp"
+                ],
+                "summary": "MCP endpoint (JSON-RPC 2.0)",
+                "parameters": [
+                    {
+                        "description": "JSON-RPC 2.0 request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/tictactoe/games": {
+            "post": {
+                "description": "Creates a new game session. X always goes first.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tictactoe"
+                ],
+                "summary": "Create a new tic-tac-toe game",
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/tictactoe/games/{id}": {
+            "get": {
+                "description": "Returns the current state of a tic-tac-toe game.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tictactoe"
+                ],
+                "summary": "Get current game state",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Game ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/tictactoe/games/{id}/moves": {
+            "post": {
+                "description": "Submits a player's move. Returns updated board state.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tictactoe"
+                ],
+                "summary": "Make a move in a tic-tac-toe game",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Game ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Move details",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/internal_tools_tictactoe.moveRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "internal_tools_tictactoe.moveRequest": {
+            "type": "object",
+            "required": [
+                "player",
+                "position"
+            ],
+            "properties": {
+                "player": {
+                    "type": "string",
+                    "enum": [
+                        "X",
+                        "O"
+                    ]
+                },
+                "position": {
+                    "type": "integer",
+                    "maximum": 8,
+                    "minimum": 0
+                }
+            }
+        }
+    }
+}
