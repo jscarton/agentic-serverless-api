@@ -30,6 +30,14 @@ func OK(c *gin.Context, data any) {
 	})
 }
 
+func Created(c *gin.Context, data any) {
+	c.JSON(201, Envelope{
+		Data:  data,
+		Error: nil,
+		Meta:  newMeta(c),
+	})
+}
+
 func Fail(c *gin.Context, status int, code, message string) {
 	c.JSON(status, Envelope{
 		Data:  nil,
