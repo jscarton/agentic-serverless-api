@@ -2,3 +2,4 @@ bootstrap
 function.zip
 *.env
 .env*
+.DS_Store

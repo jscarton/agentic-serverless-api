@@ -1,7 +1,6 @@
 .PHONY: build test dev deploy swag clean
 
 BINARY = bootstrap
-MODULE = github.com/jscarton/agentic-serverless-api
 
 swag:
 	swag init -g cmd/api/main.go -o docs/swagger --parseDependency
@@ -19,7 +18,7 @@ deploy: build
 	zip function.zip $(BINARY)
 	aws lambda update-function-code \
 		--function-name agentic-serverless-api \
-		--zip-file fileb://function.zip
+		--zip-file fileb://function.zip; \
 	rm -f function.zip
 
 clean:
