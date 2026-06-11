@@ -57,6 +57,17 @@ func (s *Server) Handle(c *gin.Context) {
 	}
 
 	switch req.Method {
+	case "initialize":
+		c.JSON(http.StatusOK, jsonRPCResponse{
+			JSONRPC: "2.0",
+			ID:      req.ID,
+			Result: map[string]any{
+				"protocolVersion": "2024-11-05",
+				"capabilities":    map[string]any{"tools": map[string]any{}},
+				"serverInfo":      map[string]any{"name": "tic-tac-toe", "version": "1.0.0"},
+			},
+		})
+
 	case "tools/list":
 		tools := s.registry.List()
 		toolDefs := make([]map[string]any, 0, len(tools))
