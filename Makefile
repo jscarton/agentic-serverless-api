@@ -1,6 +1,10 @@
-.PHONY: build test dev deploy swag clean
+.PHONY: build test dev deploy swag clean setup
 
 BINARY = bootstrap
+
+setup:
+	go mod download
+	@if [ ! -f .env ]; then cp .env.example .env; echo "Created .env from .env.example"; else echo ".env already exists, skipping"; fi
 
 swag:
 	swag init -g cmd/api/main.go -o docs/swagger --parseDependency
